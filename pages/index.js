@@ -5,12 +5,12 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <h1>SnapCart 🛒</h1>
-        <p>Your neighbourhood online store</p>
+        <h1>Welcome to SnapCart 🛒</h1>
+        <p>Easy online shopping for your neighborhood</p>
       </header>
 
       <main className={styles.main}>
-        <h2>Products</h2>
+        <h2>Our Products</h2>
         <div className={styles.grid}>
           {products.map((p) => (
             <div key={p.id} className={styles.card}>
@@ -18,7 +18,7 @@ export default function Home() {
               <h3>{p.name}</h3>
               <p className={styles.price}>${p.price.toFixed(2)}</p>
               <p className={styles.stock}>In stock: {p.stock}</p>
-              <button className={styles.btn}>Add to Cart</button>
+              <button className={styles.btn}>Add to cart</button>
             </div>
           ))}
         </div>
