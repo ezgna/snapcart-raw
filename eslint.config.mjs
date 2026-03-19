@@ -20,6 +20,9 @@ export default [
         process: "readonly",
       },
     },
-    rules: {},
+    rules: {
+      "no-var": "error",
+      "no-unused-vars": "error",
+    },
   },
 ];

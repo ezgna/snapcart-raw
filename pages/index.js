@@ -2,6 +2,8 @@ import products from "../data/products";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  var x = 1;
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
