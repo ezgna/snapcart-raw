@@ -9,19 +9,20 @@ export const handler = async (event) => {
     console.log("Failed to parse body:", e.message);
   }
 
+  // Include nulls so missing fields still show in CloudWatch (JSON.stringify drops undefined)
   console.log(
     JSON.stringify({
-      status: payload.status,
-      branch: payload.branch,
-      commit: payload.commit,
-      commit_message: payload.commit_message,
-      commit_author_name: payload.commit_author_name,
-      commit_author_email: payload.commit_author_email,
-      pushed_by: payload.pushed_by,
-      timestamp: payload.timestamp,
-      repository: payload.repository,
-      workflow: payload.workflow,
-      run_id: payload.run_id,
+      status: payload.status ?? null,
+      branch: payload.branch ?? null,
+      commit: payload.commit ?? null,
+      commit_message: payload.commit_message ?? null,
+      commit_author_name: payload.commit_author_name ?? null,
+      commit_author_email: payload.commit_author_email ?? null,
+      pushed_by: payload.pushed_by ?? null,
+      timestamp: payload.timestamp ?? null,
+      repository: payload.repository ?? null,
+      workflow: payload.workflow ?? null,
+      run_id: payload.run_id ?? null,
     })
   );
 

@@ -100,14 +100,18 @@ jobs:
             docker rm snapcart || true
             docker run -d --name snapcart -p 3000:3000 --restart unless-stopped ghcr.io/${{ github.repository }}:latest
 
+      # Commit text + author: read from git (github.event.head_commit can be null/incomplete)
+      - name: Checkout for Lambda commit metadata
+        if: always()
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
       # POST JSON to Lambda (Function URL) from EC2 step outcome → CloudWatch logs
       - name: Notify Lambda of deployment result
         if: always()
         env:
           LAMBDA_URL: ${{ secrets.LAMBDA_URL }}
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
-          COMMIT_AUTHOR_NAME: ${{ github.event.head_commit.author.name }}
-          COMMIT_AUTHOR_EMAIL: ${{ github.event.head_commit.author.email }}
         run: |
           if [ "${{ steps.ec2_deploy.outcome }}" = "success" ]; then
             STATUS="success"
@@ -115,13 +119,16 @@ jobs:
             STATUS="failure"
           fi
           TS=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
+          COMMIT_AUTHOR_NAME="$(git log -1 --pretty=%an)"
+          COMMIT_AUTHOR_EMAIL="$(git log -1 --pretty=%ae)"
           BODY=$(jq -n \
             --arg status "$STATUS" \
             --arg branch "${{ github.ref_name }}" \
             --arg commit "${{ github.sha }}" \
-            --arg commit_message "${COMMIT_MESSAGE}" \
-            --arg commit_author_name "${COMMIT_AUTHOR_NAME}" \
-            --arg commit_author_email "${COMMIT_AUTHOR_EMAIL}" \
+            --arg commit_message "$COMMIT_MESSAGE" \
+            --arg commit_author_name "$COMMIT_AUTHOR_NAME" \
+            --arg commit_author_email "$COMMIT_AUTHOR_EMAIL" \
             --arg pushed_by "${{ github.actor }}" \
             --arg repository "${{ github.repository }}" \
             --arg workflow "${{ github.workflow }}" \
