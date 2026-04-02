@@ -87,6 +87,7 @@ jobs:
     needs: [build-and-push]
     steps:
       - name: SSH で EC2 に接続しイメージを反映
+        id: ec2_deploy
         uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -98,3 +99,19 @@ jobs:
             docker stop snapcart || true
             docker rm snapcart || true
             docker run -d --name snapcart -p 3000:3000 --restart unless-stopped ghcr.io/${{ github.repository }}:latest
+
+      # EC2 成否に応じて Lambda（Function URL）へ JSON を POST → CloudWatch にログ
+      - name: Lambda にデプロイ結果を通知
+        if: always()
+        env:
+          LAMBDA_URL: ${{ secrets.LAMBDA_URL }}
+        run: |
+          if [ "${{ steps.ec2_deploy.outcome }}" = "success" ]; then
+            STATUS="success"
+          else
+            STATUS="failure"
+          fi
+          TS=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          curl -sS -f -X POST "$LAMBDA_URL" \
+            -H "Content-Type: application/json" \
+            -d "{\"status\":\"${STATUS}\",\"branch\":\"${{ github.ref_name }}\",\"commit\":\"${{ github.sha }}\",\"repository\":\"${{ github.repository }}\",\"workflow\":\"${{ github.workflow }}\",\"run_id\":\"${{ github.run_id }}\",\"timestamp\":\"${TS}\"}"
