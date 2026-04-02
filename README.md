@@ -1,23 +1,23 @@
 # Snapcart
 
-Next.js 14 製のショッピングカートのサンプルアプリです。
+Sample shopping cart app built with Next.js 14.
 
-## ローカル開発
+## Local development
 
 ```bash
 npm install
 npm run dev
 ```
 
-ブラウザで `http://localhost:3000` を開きます。
+Open `http://localhost:3000` in your browser.
 
-## ビルド・テスト
+## Build and test
 
 ```bash
 npm run build
 npm run lint
 npm test
-npm start   # 本番相当（ポート 3000）
+npm start   # production-like run on port 3000
 ```
 
 ## Docker
@@ -27,6 +27,6 @@ docker build -t snapcart .
 docker run -p 3000:3000 snapcart
 ```
 
-## CI/CD（`main` への push）
+## CI/CD (push to `main`)
 
-GitHub Actions で **Lint → Test → GHCR へイメージ push → EC2 で pull & コンテナ起動** まで実行します。EC2 接続用の Secrets（`EC2_HOST` / `EC2_USERNAME` / `EC2_KEY`）がリポジトリに設定されている必要があります。
+GitHub Actions runs **Lint → Test → push image to GHCR → pull on EC2 and run the container**. Configure repository secrets for EC2: `EC2_HOST`, `EC2_USERNAME`, and `EC2_KEY`. For post-deploy notifications, set `LAMBDA_URL` to your Lambda function URL.
