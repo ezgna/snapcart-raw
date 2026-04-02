@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build submission-devops-exercise3.pdf from submission-devops-exercise3.md (repo root)."""
+"""Build submission-participation-exercise.pdf from submission-participation-exercise.md (repo root)."""
 
 import re
 from pathlib import Path
@@ -7,8 +7,8 @@ from pathlib import Path
 from fpdf import FPDF
 
 ROOT = Path(__file__).resolve().parent.parent
-MD_PATH = ROOT / "submission-devops-exercise3.md"
-OUT_PATH = ROOT / "submission-devops-exercise3.pdf"
+MD_PATH = ROOT / "submission-participation-exercise.md"
+OUT_PATH = ROOT / "submission-participation-exercise.pdf"
 
 
 def strip_md(s: str) -> str:

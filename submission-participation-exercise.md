@@ -1,4 +1,4 @@
-# DevOps Exercise 3 — Submission
+# Participation Exercise
 
 <!-- Regenerate PDF: `.venv-submission/bin/python scripts/build_submission_pdf.py` -->
 
