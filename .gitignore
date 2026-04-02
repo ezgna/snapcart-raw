@@ -1,6 +1,4 @@
 .venv-submission/
-# Local submission materials (PDF, screenshots, drafts)
-submission-*
 
 node_modules/
 .DS_Store
